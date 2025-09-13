@@ -1,4 +1,3 @@
-import asyncHandler from "express-async-handler";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import { errorResponse, successResponse } from "../utils/response.js";
@@ -6,7 +5,7 @@ import { errorResponse, successResponse } from "../utils/response.js";
 // @desc    Register new user
 // @route   POST /api/users/register
 // @access  Public
-export const registerUser = asyncHandler(async (req, res) => {
+export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -36,12 +35,12 @@ export const registerUser = asyncHandler(async (req, res) => {
   } else {
     return errorResponse(res, "Invalid user data", 400);
   }
-});
+};
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
 // @access  Public
-export const authUser = asyncHandler(async (req, res) => {
+export const authUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -62,34 +61,35 @@ export const authUser = asyncHandler(async (req, res) => {
   } else {
     return errorResponse(res, "Invalid email or password", 401);
   }
-});
+};
 
 // @desc forgot password
 // @route POST /api/users/forgot-password
 // @access Public
-export const forgotPassword = asyncHandler(async (req, res) => {
+export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
     return errorResponse(res, "User not found", 404);
   }
   // Here you would typically generate a reset token and send an email
-});
+};
 
 // @desc reset password
 // @route POST /api/users/reset-password
 // @access Public
-export const resetPassword = asyncHandler(async (req, res) => {
+export const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
   // Here you would typically verify the reset token and update the password
 
   return successResponse(res, "Password reset successful", {}, 200);
-});
+};
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
-export const getUserProfile = asyncHandler(async (req, res) => {
+export const getUserProfile = async (req, res) => {
+  console.log(req.user);
   const user = await User.findById(req.user._id);
 
   if (user) {
@@ -108,12 +108,12 @@ export const getUserProfile = asyncHandler(async (req, res) => {
   } else {
     return errorResponse(res, "User not found", 404);
   }
-});
+};
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-export const updateUserProfile = asyncHandler(async (req, res) => {
+export const updateUserProfile = async (req, res) => {
   const user = await User.findById(req.user._id);
   if (user) {
     user.name = req.body.name || user.name;
@@ -136,4 +136,4 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
   } else {
     return errorResponse(res, "User not found", 404);
   }
-});
+};

@@ -1,23 +1,25 @@
 import mongoose from "mongoose";
 
-const OrderItemSchema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
   {
-    order: {
+    productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
+      ref: "Product",
       required: true,
     },
-    productVariant: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ProductVariant",
+      ref: "User",
       required: true,
     },
-    quantity: {
+    rating: {
       type: Number,
       required: true,
+      min: 1,
+      max: 5,
     },
-    unitPrice: {
-      type: Number,
+    comment: {
+      type: String,
       required: true,
     },
   },
@@ -26,6 +28,6 @@ const OrderItemSchema = new mongoose.Schema(
   }
 );
 
-const OrderItem = mongoose.model("OrderItem", OrderItemSchema);
+const Review = mongoose.model("Review", reviewSchema);
 
-export default OrderItem;
+export default Review;

@@ -13,42 +13,18 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  category: {
-    type: String,
-    required: true,
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
   },
   thumbnail: {
     type: String,
     required: true,
   },
-  countInStock: {
-    type: Number,
-    required: true,
-  },
-
-  rating: {
-    type: Number,
-    required: true,
-  },
-  numReviews: {
-    type: Number,
-    required: true,
-  },
-  reviews: [
+  variants: [
     {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-      comment: {
-        type: String,
-        required: true,
-      },
-      rating: {
-        type: Number,
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ProductVariant",
     },
   ],
 });

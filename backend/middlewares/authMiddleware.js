@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler";
 import User from "../models/User.js";
 
-export const protect = asyncHandler(async (req, res, next) => {
+export const protect = async (req, res, next) => {
   let token;
   // Kiểm tra xem header Authorization có tồn tại và bắt đầu bằng "Bearer" không vì token thường được gửi theo định dạng này
   if (
@@ -24,4 +23,4 @@ export const protect = asyncHandler(async (req, res, next) => {
   } else {
     res.status(401).json({ message: "Not authorized, no token" });
   }
-});
+};
