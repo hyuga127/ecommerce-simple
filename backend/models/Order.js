@@ -34,6 +34,20 @@ const orderSchema = new mongoose.Schema(
       default: "Pending",
       required: true,
     },
+    shippingAddress: {
+      type: String,
+      required: true,
+    },
+    paymentMethod: {
+      type: String,
+      required: true,
+    },
+    paidAt: {
+      type: Date,
+    },
+    deliveredAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

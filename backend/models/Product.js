@@ -17,18 +17,26 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
   },
-  thumbnail: {
+  thumbnail: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  discount: {
+    type: Number,
+    default: 0,
+  },
+  brand: {
     type: String,
     required: true,
   },
-  variants: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "ProductVariant",
-    },
-  ],
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Products", productSchema);
 
 export default Product;
