@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import userService from "../services/userService.js";
 import generateToken from "../utils/generateToken.js";
 import { errorResponse, successResponse } from "../utils/response.js";
 
@@ -8,32 +9,17 @@ import { errorResponse, successResponse } from "../utils/response.js";
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  const userExists = await User.findOne({ email });
-
-  if (userExists) {
-    return errorResponse(res, "User already exists", 400);
-  }
-
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
-
-  if (user) {
+  try {
+    const user = await userService.registerUser({ name, email, password });
     return successResponse(
       res,
       "User registered successfully",
-      {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        token: generateToken(user._id),
-      },
+
+      { ...user, token: generateToken(user._id) },
       201
     );
-  } else {
-    return errorResponse(res, "Invalid user data", 400);
+  } catch (error) {
+    return errorResponse(res, error.message, 400);
   }
 };
 
@@ -42,24 +28,18 @@ export const registerUser = async (req, res) => {
 // @access  Public
 export const authUser = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
-  if (user && (await user.matchPassword(password))) {
-    return successResponse(
-      res,
-      "Login successful",
-      {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        avatar: user.avatar,
-        token: generateToken(user._id),
-      },
-      200
-    );
-  } else {
-    return errorResponse(res, "Invalid email or password", 401);
+  try {
+    const user = await userService.loginUser(email, password);
+    if (user) {
+      return successResponse(
+        res,
+        "Login successful",
+        { ...user, token: generateToken(user._id) },
+        200
+      );
+    }
+  } catch (error) {
+    return errorResponse(res, error.message, 401);
   }
 };
 
@@ -114,26 +94,19 @@ export const getUserProfile = async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 export const updateUserProfile = async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.avatar = req.body.avatar || user.avatar;
-
-    const updatedUser = await user.save();
+  try {
+    const updatedUser = await userService.updateUserProfile(
+      req.user._id,
+      req.body
+    );
 
     return successResponse(
       res,
       "User profile updated successfully",
-      {
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        avatar: updatedUser.avatar,
-      },
+      updatedUser,
       200
     );
-  } else {
-    return errorResponse(res, "User not found", 404);
+  } catch (error) {
+    return errorResponse(res, error.message, error.statusCode || 500);
   }
 };
