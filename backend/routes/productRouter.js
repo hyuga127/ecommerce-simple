@@ -1,28 +1,15 @@
 import express from "express";
-
-// POST /api/products → createProduct
-
-// GET /api/products → getAllProducts
-
-// GET /api/products/:id → getProductById
-
-// PUT /api/products/:id → updateProduct
-
-// DELETE /api/products/:id → deleteProduct
-
-import {
-  createProduct,
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-} from "../controllers/productController.js";
+import { validate } from "../middlewares/validate.js";
+import { createProductSchema } from "../validators/productValidator.js";
 import { protect } from "../middlewares/authMiddleware.js";
+import { createProduct } from "../controllers/productController.js";
 
 const router = express.Router();
 
-router.post("/", protect, createProduct);
-router.get("/", getAllProducts);
-router.get("/:id", getProductById);
-router.put("/:id", protect, updateProduct);
-router.delete("/:id", protect, deleteProduct);
+router.post("/create", protect, validate(createProductSchema), createProduct);
+// router.get("/", getAllProducts);
+// router.get("/:id", getProductById);
+// router.put("/:id", protect, updateProduct);
+// router.delete("/:id", protect, deleteProduct);
+
+export default router;
