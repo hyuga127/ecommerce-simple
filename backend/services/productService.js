@@ -21,6 +21,12 @@ const createProduct = async (productData) => {
   return savedProduct;
 };
 
+const getAllProducts = async () => {
+  const products = await Product.find();
+  return products;
+};
+
 export default {
   createProduct,
+  getAllProducts,
 };

@@ -14,3 +14,12 @@ export const createProduct = async (req, res) => {
     return errorResponse(res, error.message || "Server Error", 500);
   }
 };
+
+export const getAllProducts = async (req, res) => {
+  try {
+    const products = await productService.getAllProducts();
+    return successResponse(res, "Products fetched successfully", products, 200);
+  } catch (error) {
+    return errorResponse(res, error.message || "Server Error", 500);
+  }
+};
