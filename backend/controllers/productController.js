@@ -60,33 +60,8 @@ export const getProductById = async (req, res) => {
 export const searchProducts = async (req, res) => {
   try {
     const keyword = req.query.keyword;
-
-    const products = await productService.getAllProducts();
-
-    if (keyword) {
-      // Giải thích: Sử dụng Fuse.js để tìm kiếm sản phẩm theo từ khóa (keys) và độ chính xác (threshold)
-      // keys: Các trường trong sản phẩm để tìm kiếm (ví dụ: name, description, brand)
-      // threshold: Độ chính xác của kết quả tìm kiếm (giá trị từ 0 đến 1, càng thấp càng chính xác)
-      const fuse = new Fuse(products, {
-        keys: ["name", "description", "brand"],
-        threshold: 0.4,
-      });
-      const results = fuse.search(keyword);
-      const matchedProducts = results.map((result) => result.item);
-      return successResponse(
-        res,
-        "Products fetched successfully",
-        matchedProducts,
-        200
-      );
-    } else {
-      return successResponse(
-        res,
-        "Products fetched successfully",
-        products,
-        200
-      );
-    }
+    const products = await productService.searchByKeyword(keyword);
+    return successResponse(res, "Products fetched successfully", products, 200);
   } catch (error) {
     return errorResponse(res, error.message || "Server Error", 500);
   }

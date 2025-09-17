@@ -1,5 +1,6 @@
 import Product from "../models/Product.js";
 import Category from "../models/Category.js";
+import Fuse from "fuse.js";
 
 const insertOneProduct = async (productData) => {
   const { name, price, description, thumbnail, categoryId, brand, discount } =
@@ -41,6 +42,25 @@ const getAllProducts = async () => {
   return products;
 };
 
+const searchByKeyword = async (keyword) => {
+  const products = await getAllProducts();
+
+  if (keyword) {
+    // Giải thích: Sử dụng Fuse.js để tìm kiếm sản phẩm theo từ khóa (keys) và độ chính xác (threshold)
+    // keys: Các trường trong sản phẩm để tìm kiếm (ví dụ: name, description, brand)
+    // threshold: Độ chính xác của kết quả tìm kiếm (giá trị từ 0 đến 1, càng thấp càng chính xác)
+    const fuse = new Fuse(products, {
+      keys: ["name", "description", "brand"],
+      threshold: 0.5,
+    });
+    const results = fuse.search(keyword);
+    const matchedProducts = results.map((result) => result.item);
+    return matchedProducts;
+  } else {
+    return products;
+  }
+};
+
 const getProductById = async (id) => {
   const product = await Product.findById(id);
   return product;
@@ -49,5 +69,7 @@ const getProductById = async (id) => {
 export default {
   insertOneProduct,
   insertMultiProducts,
+  getProductById,
+  searchByKeyword,
   getAllProducts,
 };

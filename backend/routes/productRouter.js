@@ -4,6 +4,7 @@ import { createProductSchema } from "../validators/productValidator.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import {
   createProduct,
+  createProducts,
   getAllProducts,
   getProductById,
   searchProducts,
@@ -16,9 +17,10 @@ router.post(
   "/create-multiple",
   protect,
   validate(createProductSchema),
-  createProduct
+  createProducts
 );
-router.get("/", searchProducts);
+router.get("/", getAllProducts);
+router.get("/search", searchProducts);
 router.get("/:id", getProductById);
 // router.put("/:id", protect, updateProduct);
 // router.delete("/:id", protect, deleteProduct);
