@@ -66,10 +66,19 @@ const getProductById = async (id) => {
   return product;
 };
 
+const updateProduct = async (id, updateData) => {
+  const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
+  return updatedProduct;
+};
+
 export default {
   insertOneProduct,
   insertMultiProducts,
   getProductById,
   searchByKeyword,
   getAllProducts,
+  updateProduct,
 };

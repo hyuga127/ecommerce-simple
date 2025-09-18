@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import morgan from "morgan";
 import userRouter from "./routes/userRouter.js";
 import uploadRouter from "./routes/uploadRouter.js";
+import categoryRouter from "./routes/categoryRouter.js";
 import productRouter from "./routes/productRouter.js";
 import { swaggerUiSetup, swaggerUiDocs } from "./config/swagger.js";
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/users", userRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/products", productRouter);
+app.use("/api/categories", categoryRouter);
 
 const PORT = process.env.PORT || 5000;
 

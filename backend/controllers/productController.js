@@ -1,6 +1,5 @@
 import productService from "../services/productService.js";
 import { errorResponse, successResponse } from "../utils/response.js";
-import Fuse from "fuse.js";
 
 // @desc  Create a new product
 // @route POST /api/products/create
@@ -62,6 +61,27 @@ export const searchProducts = async (req, res) => {
     const keyword = req.query.keyword;
     const products = await productService.searchByKeyword(keyword);
     return successResponse(res, "Products fetched successfully", products, 200);
+  } catch (error) {
+    return errorResponse(res, error.message || "Server Error", 500);
+  }
+};
+
+export const updateProduct = async (req, res) => {
+  try {
+    const updatedProduct = await productService.updateProduct(
+      req.params.id,
+      req.body
+    );
+    if (updatedProduct) {
+      return successResponse(
+        res,
+        "Product updated successfully",
+        updatedProduct,
+        200
+      );
+    } else {
+      return errorResponse(res, "Product not found", 404);
+    }
   } catch (error) {
     return errorResponse(res, error.message || "Server Error", 500);
   }

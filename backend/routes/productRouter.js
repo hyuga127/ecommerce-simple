@@ -8,13 +8,19 @@ import {
   getAllProducts,
   getProductById,
   searchProducts,
+  updateProduct,
 } from "../controllers/productController.js";
 
 const router = express.Router();
 
-router.post("/create", protect, validate(createProductSchema), createProduct);
 router.post(
-  "/create-multiple",
+  "/create-product",
+  protect,
+  validate(createProductSchema),
+  createProduct
+);
+router.post(
+  "/create-multiple-products",
   protect,
   validate(createProductSchema),
   createProducts
@@ -22,7 +28,7 @@ router.post(
 router.get("/", getAllProducts);
 router.get("/search", searchProducts);
 router.get("/:id", getProductById);
-// router.put("/:id", protect, updateProduct);
+router.put("/:id", protect, updateProduct);
 // router.delete("/:id", protect, deleteProduct);
 
 export default router;
