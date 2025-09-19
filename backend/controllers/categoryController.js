@@ -1,5 +1,6 @@
 import { errorResponse, successResponse } from "../utils/response.js";
 import categoryService from "../services/categoryService.js";
+import { HTTP_STATUS, MESSAGES } from "../constants/index.js";
 
 // @desc  Create a new category
 // @route POST /api/categories/create-category
@@ -11,13 +12,17 @@ export const createCategory = async (req, res) => {
     if (category) {
       return successResponse(
         res,
-        "Category created successfully",
+        MESSAGES.CATEGORY_CREATED,
         category,
-        201
+        HTTP_STATUS.CREATED
       );
     }
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
@@ -27,12 +32,16 @@ export const getAllCategories = async (req, res) => {
     const categories = await categoryService.getAllCategories();
     return successResponse(
       res,
-      "Categories fetched successfully",
+      MESSAGES.CATEGORIES_FETCHED,
       categories,
-      200
+      HTTP_STATUS.OK
     );
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
@@ -48,15 +57,23 @@ export const updateCategory = async (req, res) => {
     if (category) {
       return successResponse(
         res,
-        "Category updated successfully",
+        MESSAGES.CATEGORY_UPDATED,
         category,
-        200
+        HTTP_STATUS.OK
       );
     } else {
-      return errorResponse(res, "Category not found", 404);
+      return errorResponse(
+        res,
+        MESSAGES.CATEGORY_NOT_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
     }
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
@@ -69,9 +86,17 @@ export const deleteCategory = async (req, res) => {
     if (category) {
       return successResponse(res, "Category deleted successfully", null, 200);
     } else {
-      return errorResponse(res, "Category not found", 404);
+      return errorResponse(
+        res,
+        MESSAGES.CATEGORY_NOT_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
     }
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };

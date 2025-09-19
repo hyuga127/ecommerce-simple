@@ -7,11 +7,25 @@ import uploadRouter from "./routes/uploadRouter.js";
 import categoryRouter from "./routes/categoryRouter.js";
 import productRouter from "./routes/productRouter.js";
 import { swaggerUiSetup, swaggerUiDocs } from "./config/swagger.js";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import cors from "cors";
 
 dotenv.config();
 connectDB();
 
 const app = express();
+
+// Security middleware
+app.use(helmet());
+app.use(cors());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+app.use("/api/", limiter);
 
 // Swagger Documentation Route
 app.use("/api-docs", swaggerUiSetup, swaggerUiDocs);

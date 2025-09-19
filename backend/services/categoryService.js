@@ -1,8 +1,8 @@
 import Category from "../models/Category.js";
 
 const createCategory = async (categoryData) => {
-  const { name, description } = categoryData;
-  const category = new Category({ name, description });
+  const { name, description, parentId } = categoryData;
+  const category = new Category({ name, description, parentId });
   const savedCategory = await category.save();
   return savedCategory;
 };

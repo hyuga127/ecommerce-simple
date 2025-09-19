@@ -1,3 +1,4 @@
+import { HTTP_STATUS, MESSAGES } from "../constants/index.js";
 import productService from "../services/productService.js";
 import { errorResponse, successResponse } from "../utils/response.js";
 
@@ -8,10 +9,19 @@ export const createProduct = async (req, res) => {
   try {
     const product = await productService.insertOneProduct(req.body);
     if (product) {
-      return successResponse(res, "Product created successfully", product, 201);
+      return successResponse(
+        res,
+        MESSAGES.PRODUCT_CREATED,
+        product,
+        HTTP_STATUS.CREATED
+      );
     }
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
@@ -37,9 +47,18 @@ export const createProducts = async (req, res) => {
 export const getAllProducts = async (req, res) => {
   try {
     const products = await productService.getAllProducts();
-    return successResponse(res, "Products fetched successfully", products, 200);
+    return successResponse(
+      res,
+      MESSAGES.PRODUCTS_FETCHED,
+      products,
+      HTTP_STATUS.OK
+    );
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
@@ -47,9 +66,18 @@ export const getProductById = async (req, res) => {
   try {
     const product = await productService.getProductById(req.params.id);
     if (product) {
-      return successResponse(res, "Product fetched successfully", product, 200);
+      return successResponse(
+        res,
+        MESSAGES.PRODUCTS_FETCHED,
+        product,
+        HTTP_STATUS.OK
+      );
     } else {
-      return errorResponse(res, "Product not found", 404);
+      return errorResponse(
+        res,
+        MESSAGES.PRODUCT_NOT_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
     }
   } catch (error) {
     return errorResponse(res, error.message || "Server Error", 500);
@@ -60,9 +88,18 @@ export const searchProducts = async (req, res) => {
   try {
     const keyword = req.query.keyword;
     const products = await productService.searchByKeyword(keyword);
-    return successResponse(res, "Products fetched successfully", products, 200);
+    return successResponse(
+      res,
+      MESSAGES.PRODUCTS_FETCHED,
+      products,
+      HTTP_STATUS.OK
+    );
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
@@ -75,14 +112,22 @@ export const updateProduct = async (req, res) => {
     if (updatedProduct) {
       return successResponse(
         res,
-        "Product updated successfully",
+        MESSAGES.PRODUCT_UPDATED,
         updatedProduct,
-        200
+        HTTP_STATUS.OK
       );
     } else {
-      return errorResponse(res, "Product not found", 404);
+      return errorResponse(
+        res,
+        MESSAGES.PRODUCT_NOT_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
     }
   } catch (error) {
-    return errorResponse(res, error.message || "Server Error", 500);
+    return errorResponse(
+      res,
+      error.message || "Server Error",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };

@@ -22,18 +22,20 @@ const insertOneProduct = async (productData) => {
   return savedProduct;
 };
 
-const insertMultiProducts = async (productData) => {
-  // Kiểm tra tất cả category trước khi insert
-  const categoryIds = productData.map((p) => p.categoryId);
+const insertMultiProducts = async (productsData) => {
+  if (!Array.isArray(productsData) || productsData.length === 0) {
+    throw new Error("Products data must be a non-empty array");
+  }
+
+  // Validate all categories exist
+  const categoryIds = [...new Set(productsData.map((p) => p.categoryId))];
   const categories = await Category.find({ _id: { $in: categoryIds } });
-  // if (categories.length !== categoryIds.length) {
-  //   console.log(categories, categoryIds);
 
-  //   throw new Error("Some categories not found");
-  // }
+  if (categories.length !== categoryIds.length) {
+    throw new Error("Some categories not found");
+  }
 
-  // Thêm nhiều product 1 lần
-  const savedProducts = await Product.insertMany(productData);
+  const savedProducts = await Product.insertMany(productsData);
   return savedProducts;
 };
 
